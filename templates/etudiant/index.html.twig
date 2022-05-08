@@ -1,40 +1,33 @@
-{% extends 'heritage.html.twig' %}
+{% extends 'layout.html.twig' %}
 
-{% block title %}Personne Index {% endblock %}
+{% block title %}Liste des etudiants{% endblock %}
 
 {% block body %}
-    {% if isPaginated %}
-        <div class="row">
-            <nav aria-label="...">
-                <ul class="pagination">
-                    <li class="page-item {%  if page == 1 %} disabled {% endif %}">
-                        <a class="page-link" href="{{ path('personne.list.by',{page: page - 1 , nbr: nbr}) }}">Previous</a>
-                    </li>
-                    {% for i in range(1 , nbpages) %}
-                        <li class="page-item {%  if page ==  i  %}active{% endif %}" >
-                            <a class="page-link" href="{{ path('personne.list.by',{page: i , nbr: nbr}) }}"> {{ i }} </a>
-                        </li>
-                    {% endfor %}
-                    <li class="page-item {%  if page == nbpages %} disabled {% endif %}">
-                        <a class="page-link" href="{{ path('personne.list.by',{page: page + 1 , nbr: nbr}) }}">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <br>
-    {% endif %}
-    <div class="row">
-        {% for personne in personnes  %}
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ personne.name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ personne.name }} {{ personne.lastname }}</h6>
-                    <p class="card-text">Age : {{ personne.age }}</p>
-                    <a href="{{path('personne.detail', {id : personne.id}) }}" class="card-link">Info</a>
-                    <a href="{{path('removePersonne', {id : personne.id}) }}" class="card-link">Delete</a>
-                    <a href="{{path('personne.form', {id : personne.id}) }}" class="card-link">Edit</a>
-                </div>
-            </div>
+    <table class="table">
+        <tr  class="table-primary">
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Section</th>
+            <th>Action</th>
+        </tr>
+        {% for etudiant in etudiants %}
+            {%if loop.index % 2 ==1 %}
+                <tr  class="table-warning" onclick="change(this,'table-warning')" >
+            {%else%}
+                <tr  class="table-success" onclick="change(this,'table-success')">
+            {%endif%}
+
+            <td >{{etudiant.nom}}</td>
+            <td >{{etudiant.prenom}}</td>
+            <td >{%if etudiant.appartenir == null %} Cet etudiant non encore affecté à une  section
+                {%else%} {{etudiant.appartenir}}
+                {%endif%}
+            </td>
+            <td><a href="{{ path('app_etudiant_delete', {id: etudiant.id}) }}">Delete</a>
+                <a href="{{ path('app_etudiant_edit', {id: etudiant.id}) }}">Edit</a>
+            </td>
+            </tr>
         {% endfor %}
-    </div>
+    </table>
+
 {% endblock %}
